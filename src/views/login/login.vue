@@ -20,10 +20,13 @@
 
 <script lang='ts' setup>
 import { reactive, toRefs, ref } from "vue";
+import { adminLoginApi, getAdminInfoApi } from "../../../request/api";
+import cookie from "js-cookie";
+import { useRouter } from "vue-router";
 const state = reactive({
   ruleForm: {
-    username: "",
-    pwd: "",
+    username: "admin",
+    pwd: "123456",
   },
 });
 const validatePwd = (
@@ -43,7 +46,37 @@ const rules = reactive({
   pwd: [{ validator: validatePwd, trigger: "blur" }],
 });
 let { ruleForm } = toRefs(state);
-const loginFn = () => {};
+// 获取路由对象
+let router = new useRouter();
+// 获取form组件对象
+let ruleFormRef = ref();
+const loginFn = () => {
+  ruleFormRef.value
+    .validate()
+    .then(() => {
+      adminLoginApi({
+        password: ruleForm.value.pwd,
+        username: ruleForm.value.username,
+      }).then((res) => {
+        if (res.code === 200) {
+          // 存储token
+          // js-cookie
+          cookie.set("token", res.data.tokenHead + res.data.token, {
+            expires: 7,
+          });
+          // 获取用户信息
+          getAdminInfoApi().then((res) => {
+            if (res.code === 200) {
+              router.push("/homepage");
+            }
+          });
+        }
+      });
+    })
+    .catch(() => {
+      console.log("校验不通过");
+    });
+};
 </script>
 <style lang='less' scoped>
 </style>
