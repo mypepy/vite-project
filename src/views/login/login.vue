@@ -23,7 +23,7 @@ import { reactive, toRefs, ref } from "vue";
 import { adminLoginApi, getAdminInfoApi } from "../../../request/api";
 import cookie from "js-cookie";
 import { useRouter } from "vue-router";
-import {useStore} from 'vuex'
+import { useStore } from "vuex";
 const state = reactive({
   ruleForm: {
     username: "admin",
@@ -50,7 +50,7 @@ let { ruleForm } = toRefs(state);
 // 获取路由对象
 let router = new useRouter();
 // 获取vuex对象
-let store=useStore();
+let store = useStore();
 // 获取form组件对象
 let ruleFormRef = ref();
 const loginFn = () => {
@@ -68,13 +68,8 @@ const loginFn = () => {
             expires: 7,
           });
           // 获取用户信息
-          getAdminInfoApi().then((res) => {
-            if (res.code === 200) {
-              // 存储的vuex
-              store.commit('UPDATEMENUS',res.data.menus);
-              router.push("/homepage");
-              
-            }
+          store.dispatch("getAdminInfo").then((res) => {
+            router.push("/homepage");
           });
         }
       });

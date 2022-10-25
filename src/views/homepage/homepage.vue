@@ -6,42 +6,35 @@
       <el-container>
         <el-aside width="200px">
           <el-menu
-            active-text-color="#ffd04b"
             background-color="#545c64"
             class="el-menu-vertical-demo"
             default-active="2"
             text-color="#fff"
-            @open="handleOpen"
-            @close="handleClose"
+            :unique-opened="true"
+            :router="true"
           >
-         <el-menu-item index="1">
-              <el-icon><icon-menu /></el-icon>
-              <span>Navigator Two</span>
-            </el-menu-item>
-            <el-menu-item index="2">
-              <el-icon><icon-menu /></el-icon>
-              <span>Navigator Two</span>
-            </el-menu-item>
-           <el-sub-menu index="3">
+            <el-sub-menu
+              :index="menu.id + ''"
+              v-for="menu in newMenus"
+              :key="menu.id"
+            >
               <template #title>
                 <el-icon><location /></el-icon>
-                <span>Navigator One</span>
+                <span>{{ menu.title }}</span>
               </template>
-              <el-menu-item index="1-1">item one</el-menu-item>
-              <el-menu-item index="1-2">item two</el-menu-item>
-            </el-sub-menu>
-            <el-sub-menu index="4">
-              <template #title>
-                <el-icon><location /></el-icon>
-                <span>Navigator One</span>
-              </template>
-              <el-menu-item index="1-1">item one</el-menu-item>
-              <el-menu-item index="1-2">item two</el-menu-item>
+              <template v-for="submenu in menu.children">
+                <el-menu-item
+                  :index="'/' + menu.name + '/' + submenu.name"
+                  v-if="submenu.hidden==0"
+                  :key="submenu.id"
+                  >{{ submenu.title }}</el-menu-item
+                ></template
+              >
             </el-sub-menu>
           </el-menu>
         </el-aside>
         <el-container>
-          <el-main>Main</el-main>
+          <el-main><router-view></router-view></el-main>
           <el-footer>Footer</el-footer>
         </el-container>
       </el-container>
@@ -51,12 +44,24 @@
 
 
 <script lang='ts' setup>
-import { reactive, toRefs, ref } from "vue";
+import { reactive, toRefs, ref, computed } from "vue";
+import { useStore } from "vuex";
+interface MenuObj {
+  parentId: number;
+  id: number;
+  children?: MenuObj[];
+  title: string;
+  hidden: 0 | 1;
+  name: string;
+}
+interface NewMenus {
+  [key: number]: MenuObj;
+}
+const store = useStore();
+const newMenus = computed<NewMenus>(() => store.getters.getNewMenus);
 </script>
 <style lang='less' scoped>
 .common-layout {
-
   height: 100%;
-  
 }
 </style>

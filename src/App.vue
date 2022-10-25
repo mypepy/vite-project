@@ -12,4 +12,7 @@ import { reactive, toRefs, ref} from 'vue'
   width: 100%;
   height: 100%;
 }
+.common-layout{
+    // background-color: red;
+  }
 </style>
