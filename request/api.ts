@@ -1,3 +1,4 @@
+import { da } from 'element-plus/es/locale';
 import request from './request'
 
 interface adminLoginData {
@@ -30,3 +31,6 @@ export const getAdminInfoApi = (): PromiseRes<adminInfoRes> => request.get('/adm
 
 // 获取用户数据列表
 export const getAdminList=(data:adminListParams):PromiseRes<{list:{}[]}>=>request.get('/admin/list',{params:data})
+
+// 修改用户信息
+export const updateAdmin=(id:number,data:AdminObjItf):PromiseRes=>request.post('/admin/update/'+id,data)
