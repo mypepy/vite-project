@@ -5,5 +5,10 @@ interface AdminObjItf {
     password?: string;
     note?: string;
     status?: number;
-    id?:number
+    id?: number
+}
+interface AdminRoleFormData {
+    userRole: RoleObjItf[];
+     roleList:RoleObjItf[];
+     adminId:number
 }

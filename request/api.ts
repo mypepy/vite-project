@@ -1,4 +1,3 @@
-import { da } from 'element-plus/es/locale';
 import request from './request'
 
 interface adminLoginData {
@@ -21,6 +20,7 @@ interface adminLoginRes {
 interface adminInfoRes {
     menus: []
 }
+
 interface adminListParams{keyword:string;pageNum:number;pageSize:number}
 
 // 登录返回token
@@ -34,3 +34,15 @@ export const getAdminList=(data:adminListParams):PromiseRes<{list:{}[]}>=>reques
 
 // 修改用户信息
 export const updateAdmin=(id:number,data:AdminObjItf):PromiseRes=>request.post('/admin/update/'+id,data)
+
+// 获取角色
+export const getRoleListAll=():PromiseRes<RoleObjItf[]>=>request.get('/role/listAll')
+
+// 根据用户id获取角色
+export const getAdminRoleByID=(id:number):PromiseRes<RoleObjItf[]>=>request.get('/admin/role/'+id)
+
+// 给用户分配角色
+export const updateAdminRole=(data:{adminId:number;roleIds:number[]}):PromiseRes=>request.post('/admin/role/update',null,{params:data})
+
+// 用户注册
+export const register=(data:AdminObjItf):PromiseRes=>request.post('/admin/register',data)
